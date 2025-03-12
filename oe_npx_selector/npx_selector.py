@@ -91,7 +91,7 @@ class Npx2_Channel_Selector:
         return r.json()
 
     def query_npx_proc_info(self, id):
-        info_str = self.gui.config(self.npx_pxi_processor_id, "NP INFO")
+        info_str = self.gui.config(self.npx_pxi_processor_id, "NP INFO")["info"]
         info_str = info_str.replace("false", "False").replace("true", "True")
         info = eval(info_str)
         return info
@@ -110,12 +110,12 @@ class Npx2_Channel_Selector:
         # Get info needed about the npx probe
         # TODO: allow multiple npx probes by storing info for each one
         npx_info = self.query_npx_proc_info(self.npx_pxi_processor_id)
-
+        probe_info = npx_info["probes"][0]
         self.oe_info = dict(
             processor_id=self.npx_pxi_processor_id,
-            basestation=npx_info["slot"],
-            port=npx_info["port"],
-            dock=npx_info["dock"],
+            basestation=probe_info["slot"],
+            port=probe_info["port"],
+            dock=probe_info["dock"],
         )
         cmd = "NP INFO"  # Try to send a basic command to validate
         try:
@@ -124,7 +124,7 @@ class Npx2_Channel_Selector:
             raise ValueError("Failed to connect to Open Ephys GUI. Is it open?")
         self.gui.acquire(1)
 
-    def oe_select_current_channels(self):
+    def oe_select_current_channels(self, debug=False):
         """
         Select the current channels in the Open Ephys GUI.
         command is like: NP SELECT <bs> <port> <dock> <electrode> <electrode> <electrode> ...
@@ -140,13 +140,15 @@ class Npx2_Channel_Selector:
         eids_pxi = " ".join(eids_pxi)
         d = self.oe_info
         cmd = f'NP SELECT {d["basestation"]} {d["port"]} {d["dock"]} {eids_pxi}'
+        if debug:
+            print(cmd)
         self.gui.config(d["processor_id"], cmd)
 
     def eids_from_group(self, bank, group):
         """
         Get the electrode ids for a given bank and group.
         """
-        return np.arange(48) + 48 * group + 384 * bank
+        return np.arange(48) + 48 * group + 384 * bank + 1
 
     def eposns_from_group(self, shank, bank, group):
         """
