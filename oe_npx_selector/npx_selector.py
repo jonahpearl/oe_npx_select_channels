@@ -193,6 +193,14 @@ class Npx2_Channel_Selector:
     def set_linear_single_shank(self, shank=0, bank=0):
         """
         Record from all 8 groups in a bank, on one particular shank.
+
+        Parameters
+        ----------
+        shank : int
+            The shank to record from. (0, 1, 2, or 3)
+
+        bank : int
+            The bank to record from. (0, 1, or 2)
         """
         self.current_eids = [
             self.eids_from_group(bank, g) for g in range(self.n_groups_per_bank)
@@ -242,6 +250,18 @@ class Npx2_Channel_Selector:
         """
         Record from 2 groups in each shank, in a given bank.
         Each bank has 4 effective "rows" since the groups are paired.
+
+        Parameters
+        ----------
+        bank : int
+            The bank to record from. (0, 1, or 2)
+
+        row_in_bank : int
+            The row in the bank to record from. (0, 1, 2, or 3)
+
+        offset : int
+            The offset of the row. 1 offset unit moves the channels
+            up by 1 group.
         """
         if row_in_bank >= self.n_rows_per_bank:
             raise ValueError(f"Invalid row_in_bank: {row_in_bank}")
@@ -267,6 +287,14 @@ class Npx2_Channel_Selector:
         """
         Record from 2 groups in each shank, in a given bank.
         There are two possible diagonals: left or right.
+
+        Parameters
+        ----------
+        bank : int
+            The bank to record from. (0, 1, or 2)
+
+        lower_side : str
+            The side of the probe to start the diagonal from. ("left" or "right")
         """
         # This can be done by taking groups indices 0 and 1 from shank 1,
         # 2 and 3 from shank 2, etc. The probe is designed such that this will always work.
@@ -298,6 +326,18 @@ class Npx2_Channel_Selector:
     def set_double_tall(self, shank=0, lower_bank=0, offset=0):
         """
         Record from a single-width column of contacts across two adjacent banks, on a single shank.
+
+        Parameters
+        ----------
+        shank : int
+            The shank to record from. (0, 1, 2, or 3)
+
+        lower_bank : int
+            The lower bank of the double-tall arrangement. (0, 1, or 2)
+
+        offset : int
+            The offset of the column. 1 offset unit moves the channels
+            up by 1 group.
         """
         assert offset < 8
         self.current_eids = []
@@ -475,6 +515,14 @@ class Npx2_Channel_Selector:
     def set_electrode_config(self, config, **kwargs):
         """
         Set the electrode configuration.
+
+        Parameters
+        ----------
+        config : str
+            The configuration to set. Must be one of the allowed_configs.
+
+        kwargs : dict
+            Additional keyword arguments to pass to the configuration function.
         """
         if config == "linear_single_shank":
             self.set_linear_single_shank(**kwargs)
@@ -498,6 +546,9 @@ class Npx2_Channel_Selector:
             raise ValueError(f"Unknown configuration: {config}")
 
     def show_available_configs(self):
+        """
+        Print the available configurations.
+        """
         for config in self.allowed_configs:
             fig, axs = plt.subplots(1, 2, figsize=(12, 4))
             self.set_electrode_config(config)
