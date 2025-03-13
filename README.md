@@ -3,6 +3,14 @@ Connect to Open Ephys and select channels on a Neuropixels probe.
 
 Currently only implemented for Npx 2.0. See notebook for example usage.
 
+## Install
+First, make a new virtual environment (Python >= 3.7), either with venv or conda. Activate the environment. Then run:
+```
+git clone https://github.com/jonahpearl/oe_npx_select_channels.git
+cd oe_npx_select_channels
+pip install -e .
+```
+
 ## Visualize your channel layouts:
 <img width="1114" alt="image" src="https://github.com/user-attachments/assets/0729f003-e933-42e2-8b45-59304f46f430" />
 
