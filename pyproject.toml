@@ -5,6 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "oe_npx_selector"
 version = "0.1.0"
+requires-python = ">=3.7"  # based on open-ephys-python-tools
 dependencies = [
     "requests>=2.28.0",
     "matplotlib",
