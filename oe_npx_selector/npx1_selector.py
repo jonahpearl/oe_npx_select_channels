@@ -620,7 +620,7 @@ class Npx2_Channel_Selector:
         return ax
 
 
-# --- ADD THIS TO THE END OF npx_selector.py ---------------------------------
+
 
 class Npx1_Channel_Selector:
     """
@@ -822,5 +822,8 @@ def make_npx_selector_from_gui(prefer='auto'):
     sel.oe_connect()
     return sel
 # --- END ADDITION ------------------------------------------------------------
+
+
+
 
 
